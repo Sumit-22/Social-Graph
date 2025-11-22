@@ -288,3 +288,40 @@ graph TD
 ```
 
 ---
+
+# **Deployment Architecture**
+
+```mermaid
+graph TB
+    subgraph Services
+        US["user-service"]
+        FI["feed-ingestor"]
+        FR["feed-ranker"]
+        FA["feed-api"]
+    end
+
+    subgraph Data
+        PG["postgres"]
+        N4J["neo4j"]
+        RDS["redis"]
+    end
+
+    subgraph Observability
+        PROM["prometheus"]
+        GRAF["grafana"]
+        JAE["jaeger"]
+    end
+
+    FI --> PG
+    FR --> RDS
+    FR --> N4J
+    FA --> RDS
+    FA --> PG
+
+    US --> PROM
+    FI --> PROM
+    FR --> PROM
+    FA --> PROM
+```
+
+---
