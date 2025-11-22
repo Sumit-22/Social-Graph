@@ -89,3 +89,31 @@ graph TB
 ```
 
 ---
+
+# **Functional Requirements**
+
+### ✔️ Users
+
+* Register / Login
+* Follow / Unfollow
+* View other users
+
+### ✔️ Posts
+
+* Create post
+* Store post in DB
+* Publish event to Kafka
+
+### ✔️ Feed System
+
+* Rank posts per follower
+* Store ranked feed in Redis
+* Retrieve feed with pagination
+
+### ✔️ Observability
+
+* Metrics → Prometheus
+* Logs → ELK
+* Tracing → Jaeger
+
+---
