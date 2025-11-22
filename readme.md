@@ -24,3 +24,17 @@ A production-grade, distributed social-media feed system designed using **Kafka,
 * [Performance & SLOs](#performance--slos)
 
 ---
+
+# **Overview**
+
+This system provides a **high-performance social media feed**, using:
+
+* Event-driven architecture
+* Real-time ranking
+* Distributed caching
+* Graph-based follower modeling
+* Scalable microservices
+
+It mimics real-world systems used by Instagram, Facebook, Twitter.
+
+---
