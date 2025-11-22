@@ -144,3 +144,17 @@ graph TB
 * Role-based access
 
 ---
+
+# **Tech Stack**
+
+* **Java 17 + Spring Boot**
+* **Kafka + Zookeeper**
+* **Redis**
+* **PostgreSQL**
+* **Neo4j Graph DB**
+* **Docker / Docker Compose**
+* **Prometheus + Grafana**
+* **ELK Stack**
+* **Jaeger Tracing**
+
+---
