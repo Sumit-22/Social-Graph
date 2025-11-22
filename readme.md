@@ -325,3 +325,20 @@ graph TB
 ```
 
 ---
+
+# **Feed Retrieval Flow**
+
+```mermaid
+graph LR
+    A["Client Request"]
+    B["Controller"]
+    C["Redis ZRANGE"]
+    D{"Cache Hit?"}
+    E["Fetch From DB"]
+    F["Build Response"]
+    A-->B-->C-->D
+    D-->|Yes|F
+    D-->|No|E-->F
+```
+
+---
