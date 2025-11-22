@@ -193,3 +193,16 @@ erDiagram
 ```
 
 ---
+
+# **Neo4j Graph Schema**
+
+```mermaid
+graph LR
+    U1["User A"] -->|FOLLOWS| U2["User B"]
+    U1 -->|FOLLOWS| U3["User C"]
+    U2 -->|FOLLOWS| U4["User D"]
+    U3 -->|FOLLOWS| U4
+    U4 -->|FOLLOWS| U1
+```
+
+---
