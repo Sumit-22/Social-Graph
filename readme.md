@@ -117,3 +117,30 @@ graph TB
 * Tracing → Jaeger
 
 ---
+
+# **Non-Functional Requirements**
+
+### **Scalability**
+
+* Horizontal scaling via microservices
+* Kafka-based decoupling
+
+### **Low Latency**
+
+* Feed read latency < 100ms
+* Redis ranking fetch < 5ms
+
+### **Availability**
+
+* 99.9% uptime target
+
+### **Consistency**
+
+* Eventual consistency via Kafka + Redis
+
+### **Security**
+
+* JWT authentication
+* Role-based access
+
+---
