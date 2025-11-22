@@ -206,3 +206,69 @@ graph LR
 ```
 
 ---
+
+
+# **Data Flow Diagram**
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant FeedIngest
+    participant Kafka
+    participant Ranker
+    participant Redis
+    participant Postgres
+    participant Neo4j
+    participant FeedAPI
+
+    Client->>FeedIngest: POST /post
+    FeedIngest->>Postgres: Save Post
+    FeedIngest->>Kafka: Publish Event
+
+    Kafka->>Ranker: PostCreatedEvent
+    Ranker->>Neo4j: Fetch Followers
+    Ranker->>Redis: ZADD feed:user score, post
+    Ranker-->>Kafka: ACK
+
+    Client->>FeedAPI: GET /feed
+    FeedAPI->>Redis: ZRANGE feed:user
+    Redis-->>FeedAPI: Sorted posts
+    FeedAPI->>Postgres: Fetch details
+    FeedAPI-->>Client: Feed JSON
+```
+
+---
+
+# **Service Component Diagram (LLD)**
+
+```mermaid
+graph TB
+    subgraph FeedIngestor
+        FC["PostController"]
+        FS["PostService"]
+        PR["PostRepository"]
+        KP["KafkaProducer"]
+        FC-->FS-->PR
+        FS-->KP
+    end
+
+    subgraph FeedRanker
+        KC["KafkaConsumer"]
+        RS["RankingService"]
+        RR["RedisOps"]
+        NQ["Neo4jQuery"]
+        KC-->RS-->RR
+        RS-->NQ
+    end
+
+    subgraph FeedAPI
+        FAC["FeedController"]
+        FAS["FeedService"]
+        RC["RedisCache"]
+        PR2["PostRepository"]
+        FAC-->FAS-->RC
+        FAS-->PR2
+    end
+```
+
+---
