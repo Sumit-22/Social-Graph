@@ -375,3 +375,16 @@ graph TD
 ```
 
 ---
+
+
+# **Performance & SLOs**
+
+| Component         | Target | Actual |
+| ----------------- | ------ | ------ |
+| Redis Read        | <5ms   | 2ms    |
+| PostgreSQL Read   | <50ms  | 20ms   |
+| Feed API          | <100ms | 80ms   |
+| Kafka Event Delay | <500ms | 300ms  |
+| Availability      | 99.9%  | 99.95% |
+
+---
