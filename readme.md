@@ -272,3 +272,19 @@ graph TB
 ```
 
 ---
+
+# **Ranking Algorithm**
+
+```mermaid
+graph TD
+    A["Event Received"]
+    B["Fetch Followers"]
+    C["Calc Recency Score"]
+    D["Calc Affinity Score"]
+    E["Weighted Score = 0.6*A + 0.4*R"]
+    F["ZADD follower feed"]
+    A-->B-->C-->E-->F
+    B-->D-->E
+```
+
+---
