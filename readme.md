@@ -158,3 +158,38 @@ graph TB
 * **Jaeger Tracing**
 
 ---
+
+# **ER Diagram**
+
+```mermaid
+erDiagram
+    USERS ||--o{ POSTS : creates
+    USERS ||--o{ FOLLOWS : follows
+    POSTS ||--o{ LIKES : receives
+    POSTS ||--o{ COMMENTS : receives
+    USERS ||--o{ LIKES : gives
+    USERS ||--o{ COMMENTS : writes
+
+    USERS {
+        string id PK
+        string username
+        string email
+        string password
+    }
+
+    POSTS {
+        string id PK
+        string author_id FK
+        string content
+        int like_count
+        timestamp created_at
+    }
+
+    FOLLOWS {
+        long id PK
+        string follower_id FK
+        string following_id FK
+    }
+```
+
+---
