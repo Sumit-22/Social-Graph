@@ -342,3 +342,36 @@ graph LR
 ```
 
 ---
+
+# **Authentication Flow**
+
+```mermaid
+graph TD
+    A["Login"]
+    B["Validate User"]
+    C["DB Lookup"]
+    D{"Match?"}
+    E["Generate JWT"]
+    A-->B-->C-->D
+    D-->|Yes|E
+    D-->|No|A
+```
+
+---
+
+# **Resilience & Error Handling**
+
+```mermaid
+graph TD
+    A["Kafka Event"]
+    B["Process"]
+    C{"Error?"}
+    D["Retry"]
+    E{"Retry Exhausted?"}
+    F["Send to Dead Letter"]
+    A-->B-->C
+    C-->|Yes|D-->E
+    E-->|Yes|F
+```
+
+---
