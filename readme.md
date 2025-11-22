@@ -38,3 +38,54 @@ This system provides a **high-performance social media feed**, using:
 It mimics real-world systems used by Instagram, Facebook, Twitter.
 
 ---
+
+# **Architecture Diagram**
+
+```mermaid
+graph TB
+    Client["🖥️ Client"]
+    APIGateway["API Gateway"]
+    
+    subgraph "Microservices"
+        US["👤 User Service<br/>Port 8080"]
+        FI["📥 Feed Ingestor<br/>Port 8090"]
+        FR["⚙️ Feed Ranker<br/>Port 8100"]
+        FA["📊 Feed API<br/>Port 8081"]
+    end
+    
+    subgraph "Message Queue"
+        Kafka["Kafka Broker<br/>Port 9092"]
+        ZK["Zookeeper<br/>Port 2181"]
+    end
+    
+    subgraph "Databases"
+        Postgres["PostgreSQL"]
+        Neo4j["Neo4j"]
+        Redis["Redis Cache"]
+    end
+    
+    subgraph "Observability"
+        Prom["Prometheus"]
+        Grafana["Grafana"]
+        Jaeger["Jaeger"]
+        ELK["ELK Stack"]
+    end
+    
+    Client -->|HTTP| APIGateway
+    APIGateway -->|Auth| US
+    APIGateway -->|Create Post| FI
+    APIGateway -->|Get Feed| FA
+
+    US --> Neo4j
+    FI --> Postgres
+    FI --> Kafka
+
+    Kafka --> FR
+    FR --> Redis
+    FR --> Neo4j
+
+    FA --> Redis
+    FA --> Postgres
+```
+
+---
