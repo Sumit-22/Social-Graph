@@ -1,0 +1,5 @@
+com\social\ingestor\model\Post.class
+com\social\ingestor\repo\PostRepository.class
+com\social\ingestor\controller\PostController.class
+com\social\ingestor\FeedIngestorApplication.class
+com\social\ingestor\kafka\PostEvent.class

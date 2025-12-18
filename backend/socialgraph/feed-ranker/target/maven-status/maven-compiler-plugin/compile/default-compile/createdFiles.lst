@@ -1,0 +1,3 @@
+com\social\ranker\service\FeedRankerConsumer.class
+com\social\ranker\kafka\PostEvent.class
+com\social\ranker\FeedRankerApplication.class

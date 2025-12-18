@@ -1,0 +1,24 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5433/socialdb
+    username: pguser
+    password: pgpass
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  neo4j:
+    uri: bolt://localhost:7687
+    username: neo4j
+    password: neo4jpass
+
+logging:
+  level:
+    org.springframework: info

@@ -1,0 +1,26 @@
+server:
+  port: 8090
+
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+  datasource:
+    url: jdbc:postgresql://localhost:5433/socialdb?TimeZone=Asia/Kolkata
+    username: pguser
+    password: pgpass
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: Asia/Kolkata
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+      show-sql: true
+logging:
+  level:
+    org.springframework: info

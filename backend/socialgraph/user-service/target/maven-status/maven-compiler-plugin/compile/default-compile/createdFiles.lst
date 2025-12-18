@@ -1,0 +1,7 @@
+com\social\user\service\FollowService.class
+com\social\user\UserServiceApplication.class
+com\social\user\controller\UserController.class
+com\social\user\repository\FollowRepository.class
+com\social\user\repository\UserRepository.class
+com\social\user\entity\User.class
+com\social\user\graph\FollowNode.class
