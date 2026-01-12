@@ -1,0 +1,66 @@
+server:
+  port: 8100
+
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: feed-ranker-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+jwt:
+  secret: your-super-secret-key-change-in-production-min-32-chars-long
+  expiration: 86400000
+
+logging:
+  level:
+    org.springframework.kafka: info
+    org.springframework: info
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/feed-ranker.log
+    max-size: 10MB
+    max-history: 10
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus,info
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  tracing:
+    sampling:
+      probability: 1.0
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      user-service:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 30s
+        failureRateThreshold: 50
+        slowCallRateThreshold: 50
+        slowCallDurationThreshold: 2s
+  retry:
+    instances:
+      user-service:
+        maxAttempts: 3
+        waitDuration: 500
+        intervalFunction: exponentialBackoff
+        exponentialBackoffMultiplier: 2

@@ -1,0 +1,167 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: pguser
+          POSTGRES_PASSWORD: pgpass
+          POSTGRES_DB: socialdb_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+      kafka:
+        image: wurstmeister/kafka
+        env:
+          KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+          KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+        ports:
+          - 9092:9092
+
+      zookeeper:
+        image: wurstmeister/zookeeper
+        ports:
+          - 2181:2181
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Build user-service
+      run: |
+        cd backend/socialgraphai/user-service
+        mvn clean package -DskipTests
+
+    - name: Build feed-api
+      run: |
+        cd backend/socialgraphai/feed-api
+        mvn clean package -DskipTests
+
+    - name: Build feed-ingestor
+      run: |
+        cd backend/socialgraphai/feed-ingestor
+        mvn clean package -DskipTests
+
+    - name: Build feed-ranker
+      run: |
+        cd backend/socialgraphai/feed-ranker
+        mvn clean package -DskipTests
+
+    - name: Run user-service tests
+      run: |
+        cd backend/socialgraphai/user-service
+        mvn test
+
+    - name: Run feed-api tests
+      run: |
+        cd backend/socialgraphai/feed-api
+        mvn test
+
+    - name: Run feed-ingestor tests
+      run: |
+        cd backend/socialgraphai/feed-ingestor
+        mvn test
+
+    - name: Run feed-ranker tests
+      run: |
+        cd backend/socialgraphai/feed-ranker
+        mvn test
+
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./backend/socialgraphai/*/target/site/jacoco/jacoco.xml
+
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: 'backend/socialgraphai'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+
+    - name: Upload Trivy results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: 'trivy-results.sarif'
+
+  docker-build:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build and push user-service
+      uses: docker/build-push-action@v4
+      with:
+        context: ./backend/socialgraphai/user-service
+        push: true
+        tags: ${{ secrets.DOCKER_USERNAME }}/user-service:latest
+
+    - name: Build and push feed-api
+      uses: docker/build-push-action@v4
+      with:
+        context: ./backend/socialgraphai/feed-api
+        push: true
+        tags: ${{ secrets.DOCKER_USERNAME }}/feed-api:latest
+
+    - name: Build and push feed-ingestor
+      uses: docker/build-push-action@v4
+      with:
+        context: ./backend/socialgraphai/feed-ingestor
+        push: true
+        tags: ${{ secrets.DOCKER_USERNAME }}/feed-ingestor:latest
+
+    - name: Build and push feed-ranker
+      uses: docker/build-push-action@v4
+      with:
+        context: ./backend/socialgraphai/feed-ranker
+        push: true
+        tags: ${{ secrets.DOCKER_USERNAME }}/feed-ranker:latest

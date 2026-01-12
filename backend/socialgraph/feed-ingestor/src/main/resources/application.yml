@@ -1,0 +1,48 @@
+server:
+  port: 8090
+
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/socialdb
+    username: pguser
+    password: pgpass
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+jwt:
+  secret: your-super-secret-key-change-in-production-min-32-chars-long
+  expiration: 86400000
+
+rate-limit:
+  requests-per-minute: 100
+
+logging:
+  level:
+    org.springframework: info
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/feed-ingestor.log
+    max-size: 10MB
+    max-history: 10
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus,info
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  tracing:
+    sampling:
+      probability: 1.0

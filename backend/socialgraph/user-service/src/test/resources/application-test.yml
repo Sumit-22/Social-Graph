@@ -1,0 +1,29 @@
+server:
+  port: 0
+
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+    username: sa
+    password: sa
+    driver-class-name: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+  # Neo4j configuration with NEW PORT 7688
+  neo4j:
+    uri: bolt://localhost:7688
+    authentication:
+      username: neo4j
+      password: password
+# JWT Secret must be valid for HS512 (>64 bytes)
+jwt:
+  secret: this-is-a-very-long-secret-key-for-testing-purposes-that-meets-hs512-requirements-of-64-bytes-at-least
+  expiration: 3600000
+  refresh-expiration: 7200000

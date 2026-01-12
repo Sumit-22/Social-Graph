@@ -1,0 +1,93 @@
+server:
+  port: 8080
+  tomcat:
+    threads:
+      max: 200
+      min-spare: 10
+    max-connections: 10000
+    accept-count: 100
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/socialdb
+    username: pguser
+    password: pgpass
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 20000
+      idle-timeout: 300000
+      max-lifetime: 1200000
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 20
+          fetch_size: 50
+        order_inserts: true
+        order_updates: true
+
+  neo4j:
+    uri: bolt://localhost:7687
+    authentication:
+      username: neo4j
+      password: neo4jpass
+    pool:
+      metrics-enabled: true
+      log-leaked-sessions: true
+      connection-acquisition-timeout: 60s
+      idle-time-before-connection-test: 30m
+      max-connection-lifetime: 1h
+      max-pool-size: 50
+  transaction:
+    default-timeout: 30s
+
+  security:
+    user:
+      name: admin
+      password: admin123
+
+logging:
+  level:
+    org.springframework: info
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/user-service.log
+    max-size: 10MB
+    max-history: 10
+
+jwt:
+  secret: this-is-a-very-long-secret-key-for-production-that-meets-hs512-security-requirements-must-be-64-bytes
+  expiration: 86400000
+  refresh-expiration: 604800000
+
+rate-limit:
+  requests-per-minute: 100
+  requests-per-hour: 5000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus,info
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  tracing:
+    sampling:
+      probability: 1.0
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    operations-sorter: method
+    tags-sorter: alpha
