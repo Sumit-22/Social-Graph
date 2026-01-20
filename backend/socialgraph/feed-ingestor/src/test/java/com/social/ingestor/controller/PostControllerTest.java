@@ -1,5 +1,5 @@
 package com.social.ingestor.controller;
-
+import com.social.ingestor.kafka.PostEvent;
 import com.social.ingestor.repo.PostRepository;
 // If you have a specific class for JWT, import it.
 // If you haven't created it in this service yet, remove the @MockBean for it.
@@ -27,7 +27,7 @@ public class PostControllerTest {
     private PostRepository postRepository;
 
     @MockBean
-    private KafkaTemplate<String, String> kafkaTemplate;
+    private KafkaTemplate<String, PostEvent> kafkaTemplate;
 
     // --- FIX: Mock Security Dependencies ---
     // Spring Security needs a UserDetailsService to start, even if you don't use it directly.
@@ -62,6 +62,6 @@ public class PostControllerTest {
                 .andExpect(status().isOk());
     }
 }
-https://www.linkedin.com/posts/jiyasilawat_hiring-sdejobs-softwareengineer-activity-7415268071961001984-7fhZ?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAADZJwgUBUV_yhKm__MPkWb2-vyuRGXIu1xI
+//https://www.linkedin.com/posts/jiyasilawat_hiring-sdejobs-softwareengineer-activity-7415268071961001984-7fhZ?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAADZJwgUBUV_yhKm__MPkWb2-vyuRGXIu1xI
 
-https://www.linkedin.com/posts/alexxubyte_systemdesign-coding-interviewtips-activity-7415803959824535552--RiX?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAADZJwgUBUV_yhKm__MPkWb2-vyuRGXIu1xI
+//https://www.linkedin.com/posts/alexxubyte_systemdesign-coding-interviewtips-activity-7415803959824535552--RiX?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAADZJwgUBUV_yhKm__MPkWb2-vyuRGXIu1xI

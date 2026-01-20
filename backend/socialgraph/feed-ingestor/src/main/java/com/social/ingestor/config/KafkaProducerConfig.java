@@ -1,4 +1,5 @@
 package com.social.ingestor.config;
+import com.social.ingestor.kafka.PostEvent;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -20,7 +21,7 @@ public class KafkaProducerConfig {
     private String bootstrapServers;
 
     @Bean
-    public ProducerFactory<String, Object> producerFactory() {
+    public ProducerFactory<String, PostEvent> producerFactory() {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -35,7 +36,7 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, Object> kafkaTemplate() {
+    public KafkaTemplate<String, PostEvent> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 }

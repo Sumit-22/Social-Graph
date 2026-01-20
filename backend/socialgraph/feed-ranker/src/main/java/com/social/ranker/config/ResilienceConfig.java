@@ -40,21 +40,23 @@ public class ResilienceConfig {
         return registry;
     }
 
-    @Bean
-    public RetryRegistry retryRegistry() {
-        RetryConfig config = RetryConfig.custom()
-                .maxAttempts(3)
-                .waitDuration(Duration.ofMillis(500))
-                .intervalFunction(io.github.resilience4j.core.IntervalFunction.ofExponentialBackoff(500, 2))
-                .build();
+@Bean
+public RetryRegistry retryRegistry() {
+    RetryConfig config = RetryConfig.custom()
+            .maxAttempts(3)
+            .intervalFunction(
+                io.github.resilience4j.core.IntervalFunction
+                    .ofExponentialBackoff(500, 2.0)
+            )
+            .build();
 
-        RetryRegistry registry = RetryRegistry.of(config);
-        registry.getEventPublisher()
-                .onEntryAdded(event -> logger.info("Retry added: {}", event.getAddedEntry().getName()))
-                .onEntryRemoved(event -> logger.info("Retry removed: {}", event.getRemovedEntry().getName()));
+    RetryRegistry registry = RetryRegistry.of(config);
+    registry.getEventPublisher()
+            .onEntryAdded(e -> logger.info("Retry added: {}", e.getAddedEntry().getName()))
+            .onEntryRemoved(e -> logger.info("Retry removed: {}", e.getRemovedEntry().getName()));
 
-        return registry;
-    }
+    return registry;
+}
 
     @Bean
     public CircuitBreaker userServiceCircuitBreaker(CircuitBreakerRegistry registry) {
