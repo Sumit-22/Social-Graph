@@ -20,22 +20,35 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtTokenProvider jwtTokenProvider;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+        return path.startsWith("/actuator")
+                || path.equals("/health");
+    }
+
+    @Override
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain
+    ) throws ServletException, IOException {
+
         try {
             String jwt = extractTokenFromRequest(request);
 
             if (jwt != null && jwtTokenProvider.validateToken(jwt)) {
                 String userId = jwtTokenProvider.getUserIdFromToken(jwt);
 
-                // Use Collections.emptyList() instead of null for authorities to avoid NullPointerException
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                        userId, null, Collections.emptyList());
+                UsernamePasswordAuthenticationToken auth =
+                        new UsernamePasswordAuthenticationToken(
+                                userId,
+                                null,
+                                Collections.emptyList()
+                        );
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
         } catch (Exception e) {
-            // FIX: Pass the exception object 'e' correctly to the logger
             logger.error("Cannot set user authentication", e);
         }
 
