@@ -9,7 +9,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/socialdb
+    url: jdbc:postgresql://postgres:5432/socialdb
     username: pguser
     password: pgpass
     hikari:
@@ -31,7 +31,7 @@ spring:
         order_updates: true
 
   neo4j:
-    uri: bolt://localhost:7687
+    uri: bolt://neo4j:7687
     authentication:
       username: neo4j
       password: neo4jpass

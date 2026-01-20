@@ -3,7 +3,7 @@ server:
 
 spring:
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: kafka:9092
     consumer:
       group-id: feed-ranker-group
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -12,7 +12,7 @@ spring:
         spring.json.trusted.packages: "*"
   data:
     redis:
-      host: localhost
+      host: redis
       port: 6379
 
 jwt:
