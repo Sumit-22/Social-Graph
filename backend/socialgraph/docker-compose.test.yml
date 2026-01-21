@@ -18,11 +18,11 @@ services:
   kafka-test:
     image: wurstmeister/kafka
     environment:
-      KAFKA_LISTENERS: "PLAINTEXT://0.0.0.0:9093"
+      KAFKA_LISTENERS: "PLAINTEXT://0.0.0.0:9092"
       KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://localhost:9093"
       KAFKA_ZOOKEEPER_CONNECT: zookeeper-test:2181
     ports:
-      - "9093:9093"
+      - "9093:9092"
     depends_on:
       - zookeeper-test
 

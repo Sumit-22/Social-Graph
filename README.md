@@ -27,6 +27,10 @@ The system is designed for **scale, low latency, resilience, and observability**
 * Production-grade monitoring and tracing
 
 ---
+## 🎥 Demo Video
+
+📺 **Project Walkthrough & Live Demo**  
+[▶️ Watch on YouTube](https://youtu.be/zzM7nepLgx4)
 
 ## High-Level Architecture
 

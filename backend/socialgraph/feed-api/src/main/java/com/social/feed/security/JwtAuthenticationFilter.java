@@ -19,21 +19,38 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtTokenProvider jwtTokenProvider;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+        return path.startsWith("/actuator")
+                || path.equals("/health");
+    }
+
+    @Override
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain
+    ) throws ServletException, IOException {
+
         try {
             String jwt = extractTokenFromRequest(request);
+
             if (jwt != null && jwtTokenProvider.validateToken(jwt)) {
                 String userId = jwtTokenProvider.getUserIdFromToken(jwt);
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                        userId, null, null);
+
+                UsernamePasswordAuthenticationToken auth =
+                        new UsernamePasswordAuthenticationToken(
+                                userId,
+                                null,
+                                java.util.Collections.emptyList()
+                        );
+
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
         } catch (Exception e) {
-            // FIX: Pass the 'e' object directly, or concatenate the string manually.
-            // DO NOT use "{}", pass 'e' as the second argument.
-            logger.error("Cannot set user authentication: " + e.getMessage(), e);
+            logger.error("Cannot set user authentication", e);
         }
+
         filterChain.doFilter(request, response);
     }
 
